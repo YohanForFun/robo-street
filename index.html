@@ -180,15 +180,19 @@ html.mob #touch.hide{display:none!important}
 .tb small{font-size:10px;font-weight:500;color:var(--gold);letter-spacing:.05em;margin-top:1px}
 .tb.on{background:rgba(232,180,90,.28);border-color:var(--gold)}
 .tb.dn,.tb.hold{transform:scale(.92);background:rgba(235,230,218,.22)}
-#tFire{width:92px;height:92px;right:calc(env(safe-area-inset-right) + 20px);bottom:calc(env(safe-area-inset-bottom) + 18px);background:rgba(130,24,12,.32);border-color:rgba(255,100,80,.75);font-size:17px}
+#tFire{width:108px;height:108px;right:calc(env(safe-area-inset-right) + 22px);bottom:calc(env(safe-area-inset-bottom) + 22px);background:rgba(130,24,12,.32);border-color:rgba(255,100,80,.75);font-size:19px}
 #tFire.hold{background:rgba(255,80,50,.4)}
-#tAim{right:calc(env(safe-area-inset-right) + 124px);bottom:calc(env(safe-area-inset-bottom) + 24px);width:68px;height:68px}
-#tJump{right:calc(env(safe-area-inset-right) + 34px);bottom:calc(env(safe-area-inset-bottom) + 124px)}
-#tReload{right:calc(env(safe-area-inset-right) + 112px);bottom:calc(env(safe-area-inset-bottom) + 108px)}
-#tCrouch{right:calc(env(safe-area-inset-right) + 204px);bottom:calc(env(safe-area-inset-bottom) + 20px)}
-#tSprint{left:calc(env(safe-area-inset-left) + 22px);bottom:calc(env(safe-area-inset-bottom) + 186px)}
+#tFire small{font-size:10px;color:rgba(235,230,218,.55);transition:color .1s}
+#tFire.auto{border-color:#ff5a3c;box-shadow:0 0 14px rgba(255,80,50,.55)}
+#tFire.auto small{color:#ffb0a0}
+html.mob.noauto #tFireS{display:none}
+#tAim{right:calc(env(safe-area-inset-right) + 146px);bottom:calc(env(safe-area-inset-bottom) + 30px);width:76px;height:76px;font-size:15px}
+#joyB.spr{border-color:var(--gold);box-shadow:0 0 16px rgba(232,180,90,.45),inset 0 0 18px rgba(232,180,90,.25)}
+#joyB.spr #joyK{background:rgba(232,180,90,.45);border-color:var(--gold)}
+#joyB.spr:after{content:'冲刺';opacity:1;color:var(--gold)}
+html.mob #cross.lock i{background:#ff4a3a;box-shadow:0 0 4px rgba(255,60,40,.9)}
 #tPause{right:calc(env(safe-area-inset-right) + 14px);top:calc(env(safe-area-inset-top) + 10px);width:64px;height:44px;border-radius:22px;font-size:13px}
-#tLook{position:absolute;right:calc(env(safe-area-inset-right) + 150px);top:40%;animation:tlk 1s 6s forwards;font-size:11px;letter-spacing:.2em;color:rgba(235,230,218,.38);pointer-events:none;text-shadow:var(--sh)}
+#tLook{position:absolute;right:calc(env(safe-area-inset-right) + 150px);text-align:center;line-height:1.8;top:40%;animation:tlk 1s 6s forwards;font-size:11px;letter-spacing:.2em;color:rgba(235,230,218,.38);pointer-events:none;text-shadow:var(--sh)}
 html.mob #rotate{position:fixed;inset:0;z-index:90;background:#07080a;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;pointer-events:auto}
 @media (orientation:portrait){html.mob #rotate{display:flex}}
 #rotate .ph{width:46px;height:78px;border:3px solid var(--bone);border-radius:9px;position:relative;animation:rot 2.2s ease-in-out infinite;margin-bottom:12px}
@@ -246,6 +250,7 @@ html.mob .btn.primary{padding:12px 26px}
 html.mob .foot{display:none}
 html.mob #tkeys{right:calc(env(safe-area-inset-right) + 4vw);bottom:5vh;grid-template-columns:repeat(2,auto);gap:6px 16px;font-size:11px}
 html.mob #tkeys span kbd{font-size:10px;padding:2px 5px}
+#pSet{z-index:41} /* 从暂停菜单打开设置时盖在暂停面板上 */
 html.mob .panel{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(5,5,6,.82)}
 html.mob .card{box-sizing:border-box;min-width:0;width:min(640px,calc(100vw - 24px));max-height:calc(100% - 20px);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:18px 22px}
 html.mob .card h4{font-size:24px;margin-bottom:12px}
@@ -256,6 +261,7 @@ html.mob .card input[type=checkbox]{width:22px;height:22px}
 html.mob .grade{font-size:56px;margin-top:-50px}
 html.mob .stats{gap:6px 20px;margin-bottom:12px}html.mob .stats div{font-size:13px;padding:3px 0}
 html.mob .help td{font-size:13px;padding:4px 10px 4px 0}
+html.mob .help kbd{white-space:nowrap;display:inline-block}html.mob .help td:first-child{white-space:nowrap}
 </style>
 </head>
 <body oncontextmenu="return false">
@@ -283,13 +289,9 @@ html.mob .help td{font-size:13px;padding:4px 10px 4px 0}
 <!-- 手机触屏控件（仅移动端显示） -->
 <div id="touch" class="layer hide">
   <div id="joyB"><div id="joyK"></div></div>
-  <div id="tLook">右侧滑动 · 转视角</div>
-  <div class="tb" data-tb="fire" id="tFire">开火</div>
+  <div id="tLook">右侧滑动 · 转视角<br>准星对准敌人会自动开火</div>
+  <div class="tb" data-tb="fire" id="tFire">开火<small id="tFireS">自动</small></div>
   <div class="tb" data-tb="aim" id="tAim">瞄准<small id="tAimL">腰射</small></div>
-  <div class="tb" data-tb="reload" id="tReload">换弹</div>
-  <div class="tb" data-tb="jump" id="tJump">跳跃</div>
-  <div class="tb" data-tb="crouch" id="tCrouch">蹲下</div>
-  <div class="tb" data-tb="sprint" id="tSprint">冲刺</div>
   <div class="tb" data-tb="pause" id="tPause">暂停</div>
 </div>
 <div id="flash" class="layer"></div>
@@ -313,9 +315,9 @@ html.mob .help td{font-size:13px;padding:4px 10px 4px 0}
     <span><kbd>C / Ctrl</kbd>蹲下</span><span><kbd>空格</kbd>跳跃</span><span><kbd>Esc</kbd>暂停</span>
   </div>
   <div id="tkeys" class="touch-only">
-    <span><kbd>左下摇杆</kbd>移动</span><span><kbd>右侧滑动</kbd>视角</span>
-    <span><kbd>开火</kbd>按住连发</span><span><kbd>瞄准</kbd>切换倍镜</span>
-    <span><kbd>冲刺 / 蹲下</kbd>点一下切换</span><span><kbd>暂停</kbd>右上角</span>
+    <span><kbd>左下摇杆</kbd>移动，推到底冲刺</span><span><kbd>右侧滑动</kbd>视角</span>
+    <span><kbd>准星对准</kbd>自动开火</span><span><kbd>开火</kbd>按住连发</span>
+    <span><kbd>瞄准</kbd>切换倍镜</span><span><kbd>暂停</kbd>右上角</span>
   </div>
 </div>
 <!-- 面板 -->
@@ -325,17 +327,20 @@ html.mob .help td{font-size:13px;padding:4px 10px 4px 0}
 <tr><td><kbd>左键</kbd></td><td>射击（按住连发）</td><td><kbd>空格</kbd></td><td>跳跃</td></tr>
 <tr><td><kbd>右键</kbd> / <kbd>Q</kbd></td><td>腰射 → 2× → 4× → 腰射</td><td><kbd>R</kbd></td><td>换弹（备弹无限）</td></tr>
 <tr><td><kbd>Esc</kbd></td><td>暂停菜单</td><td><kbd>M</kbd></td><td>静音</td></tr></table>
-<table class="help touch-only"><tr><td><kbd>左下摇杆</kbd></td><td>移动（推得越远走得越快）</td><td><kbd>冲刺</kbd></td><td>点一下开关（冲刺时无法开火）</td></tr>
-<tr><td><kbd>右侧滑动</kbd></td><td>转动视角</td><td><kbd>蹲下</kbd></td><td>点一下开关</td></tr>
-<tr><td><kbd>开火</kbd></td><td>按住连发，按住时拖动也能转视角</td><td><kbd>跳跃</kbd></td><td>跳起</td></tr>
-<tr><td><kbd>瞄准</kbd></td><td>腰射 → 2× → 4× → 腰射</td><td><kbd>换弹</kbd></td><td>换弹（备弹无限）</td></tr>
-<tr><td><kbd>暂停</kbd></td><td>右上角按钮</td><td></td><td>请横屏游玩，可在设置里调触控灵敏度</td></tr></table>
+<table class="help touch-only"><tr><td><kbd>左下摇杆</kbd></td><td>移动，推得越远走得越快；推到底保持一下自动冲刺</td></tr>
+<tr><td><kbd>右侧滑动</kbd></td><td>转动视角</td></tr>
+<tr><td><kbd>自动开火</kbd></td><td>准星对准机器狗、飞行器或护盾关闭后的变压器，稍停一下就会自动射击（设置里可关闭）</td></tr>
+<tr><td><kbd>开火</kbd></td><td>随时按住连发，按住时拖动也能转视角</td></tr>
+<tr><td><kbd>瞄准</kbd></td><td>腰射 → 2× → 4× → 腰射</td></tr>
+<tr><td><kbd>暂停</kbd></td><td>右上角按钮</td></tr>
+<tr><td><kbd>换弹</kbd></td><td>弹匣打空自动换弹，安静时也会自动补满（备弹无限）</td></tr></table>
 <p style="color:var(--dim);font-size:13px;line-height:1.8;margin:18px 0 0">· 先摧毁街区里全部 20 只机器狗和 10 架飞行器，发电站变压器的护盾才会关闭。<br>· 机器狗的头部传感器、飞行器的旋翼和机腹摄像头是弱点，伤害翻倍。<br>· 躲到掩体后、脱离机器视线约 1 秒，生命会快速恢复；暴露在外只能缓慢恢复。<br>· 飞行器从高处射击，矮掩体挡不住它，优先用倍镜把它打下来。<br>· 打掉第一台变压器会触发最后一波增援，三台全部摧毁后整条街断电。</p>
 <div class="row" style="margin-top:22px"><button class="btn" data-close>返回</button></div></div></div>
 <div id="pSet" class="layer panel hide"><div class="card"><h3>设置</h3><h4>偏好</h4><div class="col">
 <label><span><span class="kb-only">鼠标灵敏度</span><span class="touch-only">触控灵敏度</span></span><input type="range" id="sSens" min="0.2" max="3" step="0.05" value="1"></label>
 <label>主音量<input type="range" id="sVol" min="0" max="1" step="0.01" value="0.8"></label>
 <label>画质<select id="sQ"><option value="auto">自动</option><option value="high">高</option><option value="med">中</option><option value="low">低</option></select></label>
+<label class="touch-only">自动开火<input type="checkbox" id="sAuto" checked></label>
 <label>显示帧率<input type="checkbox" id="sFps"></label></div>
 <div class="row" style="margin-top:22px"><button class="btn" data-close>返回</button></div></div></div>
 <div id="pPause" class="layer panel hide"><div class="card"><h3>已暂停</h3><h4>行动暂停</h4>
@@ -3015,14 +3020,19 @@ window.__debug = {
 App.boot().catch(e => { const f = $('fatal'); f.style.display = 'block'; f.textContent += '启动失败: ' + (e.stack || e); console.error(e); });
 
 /* ======================================================================
- *  14 Touch —— 手机触屏操作：左下虚拟摇杆移动、右侧滑动转视角、
- *  开火（按住连发，按住时拖动也能转视角）、瞄准（腰射→2×→4×）、换弹、跳跃、蹲下、冲刺、暂停。
+ *  14 Touch —— 手机触屏操作（简化版）：
+ *  左下虚拟摇杆移动（推到边缘自动冲刺）、右侧滑动转视角、开火（按住连发，拖动也能转视角）、
+ *  瞄准（腰射→2×→4×）、暂停。准星对准敌人短暂停留后自动开火（设置里可关），弹匣打空自动换弹。
  *  多点触控按 touch.identifier 分别跟踪，可以同时移动 + 转视角 + 开火。
  * ====================================================================== */
 const Touch = {
   LOOK: 2.4,          // 手指每像素 → 视角（叠加设置里的灵敏度与倍镜减速）
   R: 58,              // 摇杆半径（px）
-  joyId: null, lookId: null, fireId: null, last: {}, sprint: false, on: false,
+  SPRINT_IN: .85, SPRINT_OUT: .78, SPRINT_HOLD: .2,   // 推到 85% 以上保持 0.2 秒开始冲刺，回到 78% 以下停止
+  DWELL: [.12, .25, .4],                              // 自动开火的瞄准停留时间：简单 / 普通 / 困难
+  RANGE: [75, 140, 200],                              // 自动开火有效距离：腰射 / 2× / 4×
+  joyId: null, lookId: null, fireId: null, last: {}, on: false,
+  sprint: false, edgeT: 0, joyMag: 0, auto: true, manual: false, autoFiring: false, lockT: 0, target: null, idleT: 0,
   init() {
     const L = this.el = $('touch'); this.base = $('joyB'); this.knob = $('joyK');
     const opt = { passive: false };
@@ -3039,6 +3049,9 @@ const Touch = {
     const onOri = () => { if (pq.matches) App.pause(); };
     if (pq.addEventListener) pq.addEventListener('change', onOri); else if (pq.addListener) pq.addListener(onOri);
     document.addEventListener('visibilitychange', () => { if (document.hidden) App.pause(); });
+    const sa = $('sAuto'); if (sa) { sa.checked = this.auto; sa.onchange = () => { this.auto = sa.checked; document.documentElement.classList.toggle('noauto', !this.auto); if (!this.auto) this.clearAuto(); }; }
+    // 挂到游戏主循环里，跟着游戏时间走（暂停 / 慢动作 / 测试推进都一致）
+    const tick = App.tick.bind(App); App.tick = rdt => { if (this.running()) this.update(rdt); tick(rdt); };
     this.sync();
   },
   running() { return G.director && G.director.state === 'play' && !App.paused && G.player.alive; },
@@ -3056,7 +3069,6 @@ const Touch = {
   start(e) {
     e.preventDefault(); if (!this.running()) return;
     G.audio.init();
-    const P = G.player;
     for (const t of e.changedTouches) {
       const b = t.target && t.target.closest ? t.target.closest('[data-tb]') : null;
       if (b) { this.button(b, t); continue; }
@@ -3069,19 +3081,15 @@ const Touch = {
   },
   button(b, t) {
     const P = G.player, k = b.dataset.tb; b.classList.add('dn'); setTimeout(() => b.classList.remove('dn'), 120);
-    if (k === 'fire') { if (this.fireId !== null) return; this.fireId = t.identifier; this.last[t.identifier] = [t.clientX, t.clientY]; this.setSprint(false); P.firing = true; b.classList.add('hold'); }
+    if (k === 'fire') { if (this.fireId !== null) return; this.fireId = t.identifier; this.last[t.identifier] = [t.clientX, t.clientY]; this.manual = true; this.setSprint(false); P.firing = true; b.classList.add('hold'); }
     else if (k === 'aim') { this.setSprint(false); P.cycleZoom(); }
-    else if (k === 'reload') P.startReload();
-    else if (k === 'jump') P.keys.Space = true;
-    else if (k === 'crouch') { P.crouch = !P.crouch; if (P.crouch) this.setSprint(false); }
-    else if (k === 'sprint') { this.setSprint(!this.sprint); if (this.sprint) { P.crouch = false; if (P.zoomIdx > 0) { P.zoomIdx = 0; P.zoom = 1; } } }
     else if (k === 'pause') { this.release(); App.pause(); }
   },
   setSprint(v) { this.sprint = v; G.player.keys.ShiftLeft = v; },
   joyMove(x, y) {
     let dx = (x - this.jx) / this.R, dy = (y - this.jy) / this.R; const m = Math.hypot(dx, dy);
     if (m > 1) { dx /= m; dy /= m; }
-    const mm = Math.min(1, m); this.knob.style.transform = `translate(${dx * this.R}px,${dy * this.R}px)`;
+    const mm = this.joyMag = Math.min(1, m); this.joyFwd = -dy; this.knob.style.transform = `translate(${dx * this.R}px,${dy * this.R}px)`;
     const dz = .12, k = mm < dz ? 0 : (mm - dz) / (1 - dz) / (mm || 1);
     G.player.joy = k ? { x: dx * k, y: -dy * k } : null;
   },
@@ -3100,24 +3108,57 @@ const Touch = {
     e.preventDefault();
     for (const t of e.changedTouches) {
       const id = t.identifier; delete this.last[id];
-      if (id === this.joyId) { this.joyId = null; this.resetJoy(); if (this.sprint) this.setSprint(false); }
+      if (id === this.joyId) { this.joyId = null; this.resetJoy(); }
       if (id === this.lookId) this.lookId = null;
-      if (id === this.fireId) { this.fireId = null; G.player.firing = false; $('tFire').classList.remove('hold'); }
+      if (id === this.fireId) { this.fireId = null; this.manual = false; G.player.firing = this.autoFiring; $('tFire').classList.remove('hold'); }
     }
   },
-  resetJoy() { G.player.joy = null; this.knob.style.transform = ''; this.base.style.left = ''; this.base.style.top = ''; this.base.classList.remove('act'); },
-  release() { this.joyId = this.lookId = this.fireId = null; this.last = {}; this.resetJoy(); G.player.firing = false; this.setSprint(false); $('tFire').classList.remove('hold'); },
-  // 每帧同步：控件显隐、按钮状态
+  resetJoy() { G.player.joy = null; this.joyMag = 0; this.joyFwd = 0; this.edgeT = 0; this.setSprint(false); this.knob.style.transform = ''; this.base.style.left = ''; this.base.style.top = ''; this.base.classList.remove('act', 'spr'); },
+  clearAuto() { this.autoFiring = false; this.lockT = 0; this.target = null; if (!this.manual) G.player.firing = false; },
+  release() { this.joyId = this.lookId = this.fireId = null; this.last = {}; this.manual = false; this.resetJoy(); this.clearAuto(); G.player.firing = false; $('tFire').classList.remove('hold'); },
+  // 准星正中射线：返回当前对准的可伤害目标（机器狗 / 飞行器 / 护盾关闭后的变压器），墙体会挡住
+  aimTarget() {
+    const P = G.player, o = P.eyePos(), q = new THREE.Quaternion().setFromEuler(new THREE.Euler(clamp(P.pitch + P.recPA, -1.5, 1.5), P.yaw + P.recYA, 0, 'YXZ'));
+    const d = new V3(0, 0, -1).applyQuaternion(q), range = this.RANGE[P.zoomIdx] || 75;
+    const env = G.world.raycast(o, d, range); let maxT = env ? env.t : range, best = null;
+    for (const a of G.director.machines()) { if (!a.active || a.dead || a.off) continue; const h = a.hitTest(o, d, maxT); if (h && (!best || h.t < best.t)) { best = h; best.who = a; maxT = h.t; } }
+    if (best) return best.who;
+    const tr = env && env.box && env.box.owner instanceof Transformer ? env.box.owner : null;
+    return tr && !tr.dead && !G.station.shielded ? tr : null;
+  },
+  // 每个游戏帧：自动冲刺、自动开火、空闲补弹
+  update(dt) {
+    const P = G.player;
+    // ---- 摇杆推到边缘 → 冲刺 ----
+    const edge = this.joyId !== null && this.joyMag > (this.sprint ? this.SPRINT_OUT : this.SPRINT_IN) && this.joyFwd > .45;
+    this.edgeT = edge ? this.edgeT + dt : 0;
+    const wantSprint = edge && this.edgeT >= (this.sprint ? 0 : this.SPRINT_HOLD) && !this.manual && !this.autoFiring && P.zoomIdx === 0;
+    if (wantSprint !== this.sprint) { this.setSprint(wantSprint); if (wantSprint) P.crouch = false; }
+    // ---- 自动开火：准星停在目标上一小段时间后开火，离开即停 ----
+    const tgt = this.auto ? this.aimTarget() : null;
+    if (tgt) { if (tgt !== this.target) { this.target = tgt; if (!this.autoFiring) this.lockT = 0; } this.lockT += dt; }
+    else { this.target = null; this.lockT = 0; }
+    const fireNow = !!tgt && (this.autoFiring || this.lockT >= this.DWELL[G.diff]);
+    if (fireNow && this.sprint) this.setSprint(false);
+    if (fireNow !== this.autoFiring) { this.autoFiring = fireNow; if (fireNow) G.stats.autoBursts = (G.stats.autoBursts || 0) + 1; }
+    P.firing = this.manual || this.autoFiring;
+    // ---- 安静时补弹：2 秒没开火、弹匣低于 30%、没有机器发现你 ----
+    this.idleT = P.firing ? 0 : this.idleT + dt;
+    if (this.idleT > 2 && P.mag < 9 && P.reloadT <= 0 && !G.director.all.some(m => m.active && !m.dead && !m.off && m.aware)) { P.startReload(); this.idleT = 0; }
+  },
+  // 每帧同步：控件显隐、按钮与准星状态
   sync() {
     requestAnimationFrame(() => this.sync());
     if (this.pq.matches && this.running()) App.pause(); // 竖屏时暂停，横过来后点「继续」
     const on = !!(G.director && G.director.state === 'play' && !App.paused && !G.hud.el.classList.contains('hide'));
     if (on !== this.on) { this.on = on; this.el.classList.toggle('hide', !on); if (!on) this.release(); }
+    $('cross').classList.toggle('lock', on && !!this.target && this.auto);
     if (!on) return;
     const P = G.player;
     $('tAimL').textContent = P.zoomIdx > 0 ? P.zoom + '×' : '腰射';
-    $('tAim').classList.toggle('on', P.zoomIdx > 0); $('tCrouch').classList.toggle('on', !!P.crouch); $('tSprint').classList.toggle('on', this.sprint);
-    $('tReload').classList.toggle('on', P.reloadT > 0);
+    $('tAim').classList.toggle('on', P.zoomIdx > 0);
+    this.base.classList.toggle('spr', this.sprint);
+    $('tFire').classList.toggle('auto', this.autoFiring && !this.manual);
   },
 };
 
